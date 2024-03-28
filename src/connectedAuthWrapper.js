@@ -1,5 +1,6 @@
-import { connect } from 'react-redux'
-import authWrapper from './authWrapper.js'
+import { connect } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import authWrapper from './authWrapper.js';
 
 
 const connectedDefaults = {
@@ -12,8 +13,17 @@ export default (args) => {
     ...args
   }
 
-  return (DecoratedComponent) =>
-    connect((state, ownProps) => ({
+  return (DecoratedComponent) => {
+    const ResultantComponent = (props) => {
+      const Component = authWrapper(args)(DecoratedComponent);
+      return (
+        <BrowserRouter>
+          <Component {...props} />
+        </BrowserRouter>
+      )
+    }
+
+    return connect((state, ownProps) => ({
       isAuthenticated: authenticatedSelector(state, ownProps),
       isAuthenticating: authenticatingSelector(state, ownProps)
     }), (dispatch) => ({
@@ -22,5 +32,7 @@ export default (args) => {
           dispatch(preAuthAction())
         }
       }
-    }))(authWrapper(args)(DecoratedComponent))
+    }))(ResultantComponent)
+  }
+    
 }
