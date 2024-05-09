@@ -26,7 +26,7 @@ export default (args) => {
       const params = useParams()
       const [loading, setLoading] = useState(true)
       const authProps = {...ownProps, location, params, replace: (path) => navigate(path, {replace: true})}
-      const { isAuthenticated, isAuthenticating, preAuthAction, replace, redirectPath, ...props } = authProps
+      const { isAuthenticated, isAuthenticating = false, preAuthAction, replace, redirectPath, ...props } = authProps
       
       React.useEffect(() => {
         if (loading) {
@@ -64,10 +64,7 @@ export default (args) => {
       isAuthenticated: PropTypes.bool,
       isAuthenticating: PropTypes.bool
     }
-    UserAuthWrapper.defaultProps = {
-      isAuthenticating: false
-    }
-
+    
     return hoistStatics(UserAuthWrapper, DecoratedComponent)
   }
 
